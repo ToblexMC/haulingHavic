@@ -14,12 +14,12 @@
         var maxCars = 5;
         var carSpeeds = [];
         var laneY = -100; // Initial position of the lanes above the canvas
-        var laneSpacing = 200; // Spacing between lanes\
+        var laneSpacing = 200; // Spacing between lanes
         var truckXSize = 80;
         var truckYSize = 110;
 
-
         var lanes = [
+            { x: -10, y: 0 }, // New lane with x: -10
             { x: 160, y: 0 },
             { x: 320, y: 0 },
             { x: 480, y: 0 },
@@ -34,8 +34,6 @@
             document.addEventListener("keyup", handleKeyUp);
 
             setInterval(mainloop, 1000/50);
-
-            createCars(maxCars); // Create 10 cars
         }
 
         var leftKey = false;
@@ -44,6 +42,7 @@
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
             moveTruck();
+            createCars(); // Moved car creation to mainloop
             moveCars();
             checkCollisions();
             drawLanes();
@@ -77,8 +76,8 @@
             }
         }
 
-        function createCars(numCars) {
-            for (var i = 0; i < numCars; i++) {
+        function createCars() {
+            if (cars.length < maxCars) {
                 var laneIndex = Math.floor(Math.random() * lanes.length); // Choose a random lane
                 var lane = lanes[laneIndex];
                 var carX = lane.x + Math.random() * 80; // Set carX within the lane boundaries
@@ -119,7 +118,7 @@
 
         function drawLanes() {
             canvasContext.strokeStyle = 'white';
-            canvasContext.setLineDash([60, 20]); // Set the dash pattern (25 pixels on, 10 pixels off)
+            canvasContext.setLineDash([60, 0]); // Set the dash pattern (25 pixels on, 10 pixels off)
             canvasContext.lineWidth = 7; // Set the line width
             for (var i = 0; i < lanes.length; i++) {
                 canvasContext.beginPath();
