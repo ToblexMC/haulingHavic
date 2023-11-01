@@ -14,13 +14,16 @@
         var maxCars = 5;
         var carSpeeds = [];
         var laneY = -100; // Initial position of the lanes above the canvas
-        var laneSpacing = 200; // Spacing between lanes
+        var laneSpacing = 200; // Spacing between lanes\
+        var truckXSize = 80;
+        var truckYSize = 110;
+
 
         var lanes = [
             { x: 160, y: 0 },
-            { x: 320, y: 0 }, // Adjusted the x position of the center lane
+            { x: 320, y: 0 },
             { x: 480, y: 0 },
-            { x: 640, y: 0 }
+            { x: 640, y: 0 },
         ];
 
         window.onload = function(){
@@ -76,7 +79,9 @@
 
         function createCars(numCars) {
             for (var i = 0; i < numCars; i++) {
-                var carX = Math.random() * (canvas.width - 40);
+                var laneIndex = Math.floor(Math.random() * lanes.length); // Choose a random lane
+                var lane = lanes[laneIndex];
+                var carX = lane.x + Math.random() * 80; // Set carX within the lane boundaries
                 var carY = -40; // Start cars above the canvas
                 cars.push({ x: carX, y: carY });
                 carSpeeds.push(4.0 + Math.random() * 2.0); // Vary car speeds between 4.0 and 6.0
@@ -88,9 +93,11 @@
                 cars[i].y += carSpeeds[i];
 
                 if (cars[i].y > canvas.height) {
-                    cars[i].x = Math.random() * (canvas.width - 40);
+                    var laneIndex = Math.floor(Math.random() * lanes.length);
+                    var lane = lanes[laneIndex];
+                    cars[i].x = lane.x + Math.random() * 80;
                     cars[i].y = -40;
-                    carSpeeds[i] = 4.0 + Math.random() * 2.0; // Vary car speeds between 4.0 and 6.0
+                    carSpeeds[i] = 4.0 + Math.random() * 2.0;
                 }
             }
         }
@@ -99,9 +106,9 @@
             for (var i = 0; i < cars.length; i++) {
                 if (
                     truckX < cars[i].x + 40 &&
-                    truckX + 40 > cars[i].x &&
+                    truckX + truckXSize > cars[i].x &&
                     truckY < cars[i].y + 40 &&
-                    truckY + 80 > cars[i].y
+                    truckY + truckYSize > cars[i].y
                 ) {
                     // Collision detected
                     // Adjust the truck's Y position to simulate being pushed downwards
@@ -112,7 +119,7 @@
 
         function drawLanes() {
             canvasContext.strokeStyle = 'white';
-            canvasContext.setLineDash([60, 0]); // Set the dash pattern (25 pixels on, 10 pixels off)
+            canvasContext.setLineDash([60, 20]); // Set the dash pattern (25 pixels on, 10 pixels off)
             canvasContext.lineWidth = 7; // Set the line width
             for (var i = 0; i < lanes.length; i++) {
                 canvasContext.beginPath();
@@ -124,9 +131,9 @@
 
         function renderCars() {
             for (var i = 0; i < cars.length; i++) {
-                colorRect(cars[i].x, cars[i].y, 40, 40, 'blue');
+                colorRect(cars[i].x, cars[i].y, 70, 90, 'blue');
             }
-            colorRect(truckX, truckY, 40, 80, 'red'); // Truck
+            colorRect(truckX, truckY, truckXSize, truckYSize, 'red'); // Truck
         }
 
         function colorRect(x,y,w,h,c){
