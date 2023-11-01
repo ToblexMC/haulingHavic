@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Land of the Long Lane</title>
-    </head>
-    <body>
-        <canvas id="gameCanvas" width="800px", height="800px"></canvas>
-     <script>
+<head>
+    <title>Hauling Havic</title>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
+    
+    <script>
+
         var canvas, canvasContext;
 
         window.onload = function(){
@@ -13,17 +15,18 @@
             canvasContext = canvas.getContext('2d');
 
             setInterval(mainloop, 1000/50);
-        }
+            }
 
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black')
+            colorRect(360,320,40,80,'red')
         }
-
-        function colorRect(w,y,w,h,c){
+        function colorRect(x,y,w,h,c){
             canvasContext.fillStyle = c;
-            canvasContext.fillRect(w,y,w,h);
+            canvasContext.fillRect(x,y,w,h);
         }
 
-     </script>
-    </body>
+        
+    </script>
+</body>
 </html>
