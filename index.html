@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Land of the Long Lane</title>
+    </head>
+    <body>
+        <canvas id="gameCanvas" width="800px", height="800px"></canvas>
+     <script>
+        var canvas, canvasContext;
+
+        window.onload = function(){
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            setInterval(mainloop, 1000/50);
+        }
+
+        function mainloop(){
+            colorRect(0,0,canvas.width,canvas.height,'black')
+        }
+
+        function colorRect(w,y,w,h,c){
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(w,y,w,h);
+        }
+
+     </script>
+    </body>
+</html>
