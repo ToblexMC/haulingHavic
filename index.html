@@ -8,30 +8,35 @@
     
     <script>
         var canvas, canvasContext;
-        var truckX = 360; 
+        var truckX = 360;
+        var carX, carY, carSpeed;
 
         window.onload = function(){
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
-            
 
             document.addEventListener("keydown", handleKeyDown);
             document.addEventListener("keyup", handleKeyUp);
 
+            
+            carX = Math.random() * (canvas.width - 40); 
+            carY = 0; 
+            carSpeed = 5; 
+
             setInterval(mainloop, 1000/50);
         }
 
-       
         var leftKey = false;
         var rightKey = false;
 
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
             moveTruck();
+            moveCar();
             colorRect(truckX,320,40,80,'red'); // Truck
+            colorRect(carX, carY, 40, 40, 'blue'); // Car
         }
 
-      
         function handleKeyDown(event) {
             if (event.key == "a" || event.key == "A") {
                 leftKey = true;
@@ -40,7 +45,6 @@
                 rightKey = true;
             }
         }
-
 
         function handleKeyUp(event) {
             if (event.key == "a" || event.key == "A") {
@@ -52,12 +56,20 @@
         }
 
         function moveTruck() {
-
             if (leftKey) {
-                truckX -= 7.5; 
+                truckX -= 7.5;
             }
             if (rightKey) {
-                truckX += 7.5; 
+                truckX += 7.5;
+            }
+        }
+
+        function moveCar() {
+            carY += carSpeed;
+
+            if (carY > canvas.height) {
+                carX = Math.random() * (canvas.width - 40);
+                carY = 0;
             }
         }
 
