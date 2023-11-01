@@ -10,10 +10,10 @@
         var canvas, canvasContext;
         var truckX = 360;
         var truckY = 320;
-        var cars = []; // Array to store car objects
-        var maxCars = 12; // Maximum number of cars
-        var carSpeed = 5;
-
+        var cars = [];
+        var maxCars = 10;
+        var carSpeeds = [];
+        
         window.onload = function(){
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
@@ -21,12 +21,9 @@
             document.addEventListener("keydown", handleKeyDown);
             document.addEventListener("keyup", handleKeyUp);
 
-            // Initialize the cars
-            for (var i = 0; i < maxCars; i++) {
-                createCar();
-            }
-
             setInterval(mainloop, 1000/50);
+
+            createCars(maxCars); // Create 10 cars
         }
 
         var leftKey = false;
@@ -68,19 +65,23 @@
             }
         }
 
-        function createCar() {
-            var carX = Math.random() * (canvas.width - 40);
-            var carY = -40; // Start cars above the canvas
-            cars.push({ x: carX, y: carY });
+        function createCars(numCars) {
+            for (var i = 0; i < numCars; i++) {
+                var carX = Math.random() * (canvas.width - 40);
+                var carY = -40; // Start cars above the canvas
+                cars.push({ x: carX, y: carY });
+                carSpeeds.push(4.0 + Math.random() * 2.0); // Vary car speeds between 4.0 and 6.0
+            }
         }
 
         function moveCars() {
             for (var i = 0; i < cars.length; i++) {
-                cars[i].y += carSpeed;
+                cars[i].y += carSpeeds[i];
 
                 if (cars[i].y > canvas.height) {
                     cars[i].x = Math.random() * (canvas.width - 40);
                     cars[i].y = -40;
+                    carSpeeds[i] = 4.0 + Math.random() * 2.0; // Vary car speeds between 4.0 and 6.0
                 }
             }
         }
@@ -95,7 +96,7 @@
                 ) {
                     // Collision detected
                     // Adjust the truck's Y position to simulate being pushed downwards
-                    truckY += carSpeed;
+                    truckY += carSpeeds[i];
                 }
             }
         }
