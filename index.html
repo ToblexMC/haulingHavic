@@ -9,6 +9,7 @@
     <script>
         var canvas, canvasContext;
         var truckX = 360;
+        var truckY = 320; // Initial Y position of the truck
         var carX, carY, carSpeed;
 
         window.onload = function(){
@@ -18,7 +19,6 @@
             document.addEventListener("keydown", handleKeyDown);
             document.addEventListener("keyup", handleKeyUp);
 
-            
             carX = Math.random() * (canvas.width - 40); 
             carY = 0; 
             carSpeed = 5; 
@@ -33,7 +33,8 @@
             colorRect(0,0,canvas.width,canvas.height,'black');
             moveTruck();
             moveCar();
-            colorRect(truckX,320,40,80,'red'); // Truck
+            checkCollision();
+            colorRect(truckX, truckY, 40, 80, 'red'); // Truck
             colorRect(carX, carY, 40, 40, 'blue'); // Car
         }
 
@@ -70,6 +71,19 @@
             if (carY > canvas.height) {
                 carX = Math.random() * (canvas.width - 40);
                 carY = 0;
+            }
+        }
+
+        function checkCollision() {
+            if (
+                truckX < carX + 40 &&
+                truckX + 40 > carX &&
+                truckY < carY + 40 &&
+                truckY + 80 > carY
+            ) {
+                // Collision detected
+                // Adjust the truck's Y position to simulate being pushed downwards
+                truckY += carSpeed;
             }
         }
 
