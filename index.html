@@ -11,7 +11,7 @@
         var truckX = 360;
         var truckY = 320;
         var cars = [];
-        var maxCars = 10;
+        var maxCars = 5;
         var carSpeeds = [];
         
         window.onload = function(){
@@ -23,7 +23,7 @@
 
             setInterval(mainloop, 1000/50);
 
-            createCars(maxCars); // Create 10 cars
+            createCars(maxCars);
         }
 
         var leftKey = false;
@@ -31,11 +31,11 @@
 
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
+            drawDashedLine(); // Draw lanes first
             moveTruck();
             moveCars();
             checkCollisions();
-            colorRect(truckX, truckY, 40, 80, 'red'); // Truck
-            renderCars();
+            renderCars(); // Render trucks and cars on top of the lanes
         }
 
         function handleKeyDown(event) {
@@ -101,10 +101,21 @@
             }
         }
 
+        function drawDashedLine() {
+            canvasContext.strokeStyle = 'white';
+            canvasContext.setLineDash([60, 20]); // Set the dash pattern (5 pixels on, 10 pixels off)
+            canvasContext.lineWidth = 7.5; // Set the line width
+            canvasContext.beginPath();
+            canvasContext.moveTo(canvas.width / 2, 0);
+            canvasContext.lineTo(canvas.width / 2, canvas.height);
+            canvasContext.stroke();
+        }
+
         function renderCars() {
             for (var i = 0; i < cars.length; i++) {
                 colorRect(cars[i].x, cars[i].y, 40, 40, 'blue');
             }
+            colorRect(truckX, truckY, 40, 80, 'red'); // Truck
         }
 
         function colorRect(x,y,w,h,c){
