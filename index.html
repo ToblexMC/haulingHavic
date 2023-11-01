@@ -9,8 +9,10 @@
     <script>
         var canvas, canvasContext;
         var truckX = 360;
-        var truckY = 320; // Initial Y position of the truck
-        var carX, carY, carSpeed;
+        var truckY = 320;
+        var cars = []; // Array to store car objects
+        var maxCars = 12; // Maximum number of cars
+        var carSpeed = 5;
 
         window.onload = function(){
             canvas = document.getElementById('gameCanvas');
@@ -19,9 +21,10 @@
             document.addEventListener("keydown", handleKeyDown);
             document.addEventListener("keyup", handleKeyUp);
 
-            carX = Math.random() * (canvas.width - 40); 
-            carY = 0; 
-            carSpeed = 5; 
+            // Initialize the cars
+            for (var i = 0; i < maxCars; i++) {
+                createCar();
+            }
 
             setInterval(mainloop, 1000/50);
         }
@@ -32,10 +35,10 @@
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
             moveTruck();
-            moveCar();
-            checkCollision();
+            moveCars();
+            checkCollisions();
             colorRect(truckX, truckY, 40, 80, 'red'); // Truck
-            colorRect(carX, carY, 40, 40, 'blue'); // Car
+            renderCars();
         }
 
         function handleKeyDown(event) {
@@ -65,25 +68,41 @@
             }
         }
 
-        function moveCar() {
-            carY += carSpeed;
+        function createCar() {
+            var carX = Math.random() * (canvas.width - 40);
+            var carY = -40; // Start cars above the canvas
+            cars.push({ x: carX, y: carY });
+        }
 
-            if (carY > canvas.height) {
-                carX = Math.random() * (canvas.width - 40);
-                carY = 0;
+        function moveCars() {
+            for (var i = 0; i < cars.length; i++) {
+                cars[i].y += carSpeed;
+
+                if (cars[i].y > canvas.height) {
+                    cars[i].x = Math.random() * (canvas.width - 40);
+                    cars[i].y = -40;
+                }
             }
         }
 
-        function checkCollision() {
-            if (
-                truckX < carX + 40 &&
-                truckX + 40 > carX &&
-                truckY < carY + 40 &&
-                truckY + 80 > carY
-            ) {
-                // Collision detected
-                // Adjust the truck's Y position to simulate being pushed downwards
-                truckY += carSpeed;
+        function checkCollisions() {
+            for (var i = 0; i < cars.length; i++) {
+                if (
+                    truckX < cars[i].x + 40 &&
+                    truckX + 40 > cars[i].x &&
+                    truckY < cars[i].y + 40 &&
+                    truckY + 80 > cars[i].y
+                ) {
+                    // Collision detected
+                    // Adjust the truck's Y position to simulate being pushed downwards
+                    truckY += carSpeed;
+                }
+            }
+        }
+
+        function renderCars() {
+            for (var i = 0; i < cars.length; i++) {
+                colorRect(cars[i].x, cars[i].y, 40, 40, 'blue');
             }
         }
 
