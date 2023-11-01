@@ -13,7 +13,8 @@
         var cars = [];
         var maxCars = 5;
         var carSpeeds = [];
-        
+        var laneY = -100; // Initial position of the lanes above the canvas
+
         window.onload = function(){
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
@@ -23,7 +24,7 @@
 
             setInterval(mainloop, 1000/50);
 
-            createCars(maxCars);
+            createCars(maxCars); // Create 10 cars
         }
 
         var leftKey = false;
@@ -31,10 +32,10 @@
 
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
-            drawDashedLine(); // Draw lanes first
             moveTruck();
             moveCars();
             checkCollisions();
+            drawLanes();
             renderCars(); // Render trucks and cars on top of the lanes
         }
 
@@ -101,14 +102,20 @@
             }
         }
 
-        function drawDashedLine() {
+        function drawLanes() {
             canvasContext.strokeStyle = 'white';
-            canvasContext.setLineDash([60, 20]); // Set the dash pattern (5 pixels on, 10 pixels off)
-            canvasContext.lineWidth = 7.5; // Set the line width
-            canvasContext.beginPath();
-            canvasContext.moveTo(canvas.width / 2, 0);
-            canvasContext.lineTo(canvas.width / 2, canvas.height);
-            canvasContext.stroke();
+            canvasContext.setLineDash([60, 20]); // Set the dash pattern (25 pixels on, 10 pixels off)
+            canvasContext.lineWidth = 7; // Set the line width
+            for (var i = 0; i < 10; i++) {
+                canvasContext.beginPath();
+                canvasContext.moveTo(canvas.width / 2, laneY + i * 80);
+                canvasContext.lineTo(canvas.width / 2, laneY + i * 80 + 40);
+                canvasContext.stroke();
+            }
+            laneY += 5; // Move lanes downwards
+            if (laneY >= 80) {
+                laneY = 0;
+            }
         }
 
         function renderCars() {
