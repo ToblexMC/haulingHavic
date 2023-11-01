@@ -17,11 +17,10 @@
         var laneSpacing = 200; // Spacing between lanes
 
         var lanes = [
-            { x: 160, y: 0 }, // Adjusted the x position of the left outer lane
-            { x: 320, y: 0 },
+            { x: 160, y: 0 },
+            { x: 320, y: 0 }, // Adjusted the x position of the center lane
             { x: 480, y: 0 },
-            { x: 640, y: 0 },
-
+            { x: 640, y: 0 }
         ];
 
         window.onload = function(){
@@ -113,17 +112,13 @@
 
         function drawLanes() {
             canvasContext.strokeStyle = 'white';
-            canvasContext.setLineDash([60, 20]); // Set the dash pattern (25 pixels on, 10 pixels off)
+            canvasContext.setLineDash([60, 0]); // Set the dash pattern (25 pixels on, 10 pixels off)
             canvasContext.lineWidth = 7; // Set the line width
             for (var i = 0; i < lanes.length; i++) {
                 canvasContext.beginPath();
                 canvasContext.moveTo(lanes[i].x, lanes[i].y);
-                canvasContext.lineTo(lanes[i].x, lanes[i].y + canvas.height);
+                canvasContext.lineTo(lanes[i].x, canvas.height);
                 canvasContext.stroke();
-                lanes[i].y += 5; // Move lanes downwards
-                if (lanes[i].y >= laneSpacing) {
-                    lanes[i].y = 0;
-                }
             }
         }
 
