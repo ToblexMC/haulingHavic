@@ -10,6 +10,7 @@
         var canvas, canvasContext;
         var truckX = 360;
         var truckY = 320;
+        var trailerX, trailerY; // Trailer position variables
         var cars = [];
         var maxCars = 5;
         var carSpeeds = [];
@@ -19,6 +20,7 @@
         var truckYSize = 110;
         var lastLaneIndex = -1; // Variable to store the last lane index
         var carSpawnInterval; // Interval for car spawning
+        var trailerMoveTimer = null; // Timer for delaying the moveTrailer function
 
         var lanes = [
             { x: -10, y: 0 }, // New lane with x: -10
@@ -46,10 +48,15 @@
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
             moveTruck();
+            // Delay the moveTrailer function
+            if (trailerMoveTimer === null) {
+                trailerMoveTimer = setTimeout(moveTrailer, 500); // Delay of 0.5 seconds (500 milliseconds)
+            }
             moveCars();
             checkCollisions();
             drawLanes();
-            renderCars(); // Render trucks and cars on top of the lanes
+            renderCars();
+            renderTrailer();
         }
 
         function handleKeyDown(event) {
@@ -150,9 +157,26 @@
             colorRect(truckX, truckY, truckXSize, truckYSize, 'red'); // Truck
         }
 
+        function renderTrailer() {
+            // Adjust the trailer's position to follow the truck
+            trailerX = truckX;
+            trailerY = truckY + truckYSize + 10;
+
+            colorRect(trailerX, trailerY, truckXSize, 60, 'gray'); // Trailer
+        }
+
         function colorRect(x,y,w,h,c){
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x,y,w,h);
+        }
+
+        // Define the moveTrailer function
+        function moveTrailer() {
+            // Adjust the trailer's position to follow the truck
+            trailerX = truckX;
+            trailerY = truckY + truckYSize + 10;
+            // Reset the trailerMoveTimer
+            trailerMoveTimer = null;
         }
     </script>
 </body>
