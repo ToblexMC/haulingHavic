@@ -17,6 +17,8 @@
         var laneSpacing = 200; // Spacing between lanes
         var truckXSize = 80;
         var truckYSize = 110;
+        var lastLaneIndex = -1; // Variable to store the last lane index
+        var carSpawnInterval; // Interval for car spawning
 
         var lanes = [
             { x: -10, y: 0 }, // New lane with x: -10
@@ -33,6 +35,8 @@
             document.addEventListener("keydown", handleKeyDown);
             document.addEventListener("keyup", handleKeyUp);
 
+            carSpawnInterval = setInterval(createCars, 2000); // Initial delay of 2 seconds
+
             setInterval(mainloop, 1000/50);
         }
 
@@ -42,7 +46,6 @@
         function mainloop(){
             colorRect(0,0,canvas.width,canvas.height,'black');
             moveTruck();
-            createCars(); // Moved car creation to mainloop
             moveCars();
             checkCollisions();
             drawLanes();
@@ -78,7 +81,13 @@
 
         function createCars() {
             if (cars.length < maxCars) {
-                var laneIndex = Math.floor(Math.random() * lanes.length); // Choose a random lane
+                var laneIndex;
+                do {
+                    laneIndex = Math.floor(Math.random() * lanes.length);
+                } while (laneIndex == lastLaneIndex); // Ensure a different lane than the last one
+
+                lastLaneIndex = laneIndex; // Update the last lane index
+
                 var lane = lanes[laneIndex];
                 var carX = lane.x + Math.random() * 80; // Set carX within the lane boundaries
                 var carY = -40; // Start cars above the canvas
@@ -92,7 +101,13 @@
                 cars[i].y += carSpeeds[i];
 
                 if (cars[i].y > canvas.height) {
-                    var laneIndex = Math.floor(Math.random() * lanes.length);
+                    var laneIndex;
+                    do {
+                        laneIndex = Math.floor(Math.random() * lanes.length);
+                    } while (laneIndex == lastLaneIndex); // Ensure a different lane than the last one
+
+                    lastLaneIndex = laneIndex; // Update the last lane index
+
                     var lane = lanes[laneIndex];
                     cars[i].x = lane.x + Math.random() * 80;
                     cars[i].y = -40;
@@ -104,9 +119,9 @@
         function checkCollisions() {
             for (var i = 0; i < cars.length; i++) {
                 if (
-                    truckX < cars[i].x + 40 &&
+                    truckX < cars[i].x + truckXSize &&
                     truckX + truckXSize > cars[i].x &&
-                    truckY < cars[i].y + 40 &&
+                    truckY < cars[i].y + truckXSize &&
                     truckY + truckYSize > cars[i].y
                 ) {
                     // Collision detected
